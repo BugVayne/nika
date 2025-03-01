@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "debug": "^3.2.7",
+    "mkdirp": "^1.0.4"
+  }
+}
