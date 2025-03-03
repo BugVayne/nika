@@ -157,7 +157,7 @@ export const handleSaveToCreateClass = async (
 };
 
 export const userClose = async () => {
-    const result : string = "User close";
+    const result : string = "0";
 
     const resultLinkAddr = await createLinkText(result);
     data = undefined;
