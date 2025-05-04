@@ -1,0 +1,5 @@
+concept_atomic_message
+<= nrel_subdividing:	
+	{
+		concept_creating_new_instance
+	};;
