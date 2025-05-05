@@ -52,7 +52,7 @@ ScResult CreateInstanceByWikiAgent::DoProgram(ScActionInitiatedEvent const & eve
   m_context.GetLinkContent(entityAddr, word);
   SC_LOG_DEBUG(word);
   
-  std::string command = "/home/kvetkod/Документы/sem6/nika2/nika/problem-solver/cxx/creatingInstanceByWikiModule/agent/wikipedia_fetcher \"" + word + "\"";
+  std::string command = "./wikipedia_fetcher \"" + word + "\"";
   int ret = system(command.c_str());
   SC_LOG_DEBUG(ret);
   if (ret != 0) {
@@ -62,7 +62,7 @@ ScResult CreateInstanceByWikiAgent::DoProgram(ScActionInitiatedEvent const & eve
   SC_LOG_DEBUG("Исполняемый файл выполнен, данные сохранены в wiki_result.json");
   }
   
-  const std::string filename = "/home/kvetkod/Документы/sem6/nika2/nika/problem-solver/cxx/creatingInstanceByWikiModule/agent/wiki_result.json";
+  const std::string filename = "wiki_result.json";
 
   std::ifstream file(filename);
   if (!file.is_open()) {
@@ -205,11 +205,11 @@ ScResult CreateInstanceByWikiAgent::DoProgram(ScActionInitiatedEvent const & eve
 
   ScTemplateResultItem genConstruction;
   m_context.GenerateByTemplate(result_struct, genConstruction);
-  SC_LOG_DEBUG("ok ok ok ok ok 1");
+
   ScAddr const & answerStructure = m_context.SearchElementBySystemIdentifier("answer_structure");
-  SC_LOG_DEBUG("ok ok ok ok ok 2");
+
   createMessageAndStructure("concept_message_about_successfulle_creating_instance_by_wiki", answerStructure);
-  SC_LOG_DEBUG("ok ok ok ok ok 3");
+ 
   for (size_t i = 0; i < genConstruction.Size(); ++i)
     {
         try
