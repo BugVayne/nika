@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, Fragment } from 'react';
-import { Wrapper, ChatWrapper, SCgViewerWrapper, PopupWrapper} from "./styled";
+import { Wrapper, ChatWrapper, SCgViewerWrapper, PopupWrapper, SideBarGridArea } from './styled';
 import { Message } from '@components/Chat/Message';
 import { Chat } from '@components/Chat';
 import { Date } from '@components/Chat/Date';
@@ -7,13 +7,21 @@ import { ScAddr } from 'ts-sc-client';
 import { resolveUserAgent } from '@agents/resolveUserAgent';
 import { createPopupCheck } from '@agents/helper';
 import { useChat } from '@hooks/useChat';
-import { SC_WEB_URL } from "@constants";
+import { SC_WEB_URL } from '@constants';
 import { ScClient } from 'ts-sc-client';
 import { SC_URL } from '@constants';
-import { AddRelationToEntityPopup, CreateClassInstancePopup, CreateMessageClassPopup, CreatePhraseTemplatePopup, CreateClassPopup, CreateRelationPopup } from './Popups';
+import {
+    AddRelationToEntityPopup,
+    CreateClassInstancePopup,
+    CreateMessageClassPopup,
+    CreatePhraseTemplatePopup,
+    CreateClassPopup,
+    CreateRelationPopup,
+} from './Popups';
+
+import { SideBarPanel, GridModal } from '@components/Chat/SideBar/SideBar';
 
 const client = new ScClient(SC_URL);
-
 
 export const Demo = () => {
     const [user, setUser] = useState<ScAddr | null>(null);
@@ -25,8 +33,12 @@ export const Demo = () => {
     const [createClassInstancePopup, setCreateClassInstancePopup] = useState(false);
     const [createRelationToEntityPopup, setCreateRelationToEntityPopup] = useState(false);
     const [createRelationPopup, setCreateRelationPopup] = useState(false);
-    const [form, setForm] = useState("");
-    const [relationForm, setRelationForm] = useState<string[]>([]);   
+    const [form, setForm] = useState('');
+    const [relationForm, setRelationForm] = useState<string[]>([]);
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const handleOpenModal = () => setIsModalOpen(true);
+    const handleCloseModal = () => setIsModalOpen(false);
 
     const { initChat, sendMessage, isAgentAnswer, onFetching, messages, chatRef } = useChat(user);
     const onSend = useCallback(
@@ -47,35 +59,50 @@ export const Demo = () => {
             setUser(user);
             await initChat([user]);
             setIsLoading(false);
-            
-            createPopupCheck(setCreateMessageClassAndPhraseTemplatePopup, 'concept_popup_component_for_creating_message_class_and_phrase_template');
+
+            createPopupCheck(
+                setCreateMessageClassAndPhraseTemplatePopup,
+                'concept_popup_component_for_creating_message_class_and_phrase_template',
+            );
             createPopupCheck(setCreateClassInstancePopup, 'concept_popup_component_for_creating_class_instance');
             createPopupCheck(setCreateRelationPopup, 'concept_popup_component_for_creating_relation');
             createPopupCheck(setCreateClassPopup, 'concept_popup_component_for_creating_class');
         })();
     }, [initChat]);
 
-    const MessageClassPopup = ()  => { return CreateMessageClassPopup(
-        setCreateMessageClassAndPhraseTemplatePopup,
-        setCreatePhraseTemplatePopup,
-        setForm);
+    const MessageClassPopup = () => {
+        return CreateMessageClassPopup(
+            setCreateMessageClassAndPhraseTemplatePopup,
+            setCreatePhraseTemplatePopup,
+            setForm,
+        );
     };
 
-    const PhraseTemplatePopup = () => { return CreatePhraseTemplatePopup(
-        setCreatePhraseTemplatePopup,
-        form);
+    const PhraseTemplatePopup = () => {
+        return CreatePhraseTemplatePopup(setCreatePhraseTemplatePopup, form);
     };
 
-    const ClassInstancePopup = () => { return CreateClassInstancePopup(setCreateClassInstancePopup, setCreateRelationToEntityPopup, setRelationForm)};
+    const ClassInstancePopup = () => {
+        return CreateClassInstancePopup(setCreateClassInstancePopup, setCreateRelationToEntityPopup, setRelationForm);
+    };
 
-    const RelationToEntityPopup = () => { return AddRelationToEntityPopup(setCreateRelationToEntityPopup, relationForm)};
+    const RelationToEntityPopup = () => {
+        return AddRelationToEntityPopup(setCreateRelationToEntityPopup, relationForm);
+    };
 
-    const ClassPopup = () => { return CreateClassPopup(setCreateClassPopup)};
+    const ClassPopup = () => {
+        return CreateClassPopup(setCreateClassPopup);
+    };
 
-    const RelationPopup = () => {return CreateRelationPopup(setCreateRelationPopup)};
+    const RelationPopup = () => {
+        return CreateRelationPopup(setCreateRelationPopup);
+    };
 
     return (
         <Wrapper>
+            <SideBarGridArea>
+                <SideBarPanel onBottomButtonClick={handleOpenModal} />
+            </SideBarGridArea>
             <ChatWrapper>
                 <Chat
                     ref={chatRef}
@@ -96,13 +123,11 @@ export const Demo = () => {
                                     time={item.time}
                                     isLoading={item.isLoading}
                                 >
-                                     {typeof item.text === 'string' ? (
-                                        <div dangerouslySetInnerHTML={{__html: item.text}} />
-                    
+                                    {typeof item.text === 'string' ? (
+                                        <div dangerouslySetInnerHTML={{ __html: item.text }} />
                                     ) : (
-                                    <div>{item.text}</div>
+                                        <div>{item.text}</div>
                                     )}
-
                                 </Message>
                             </Fragment>
                         );
@@ -110,45 +135,49 @@ export const Demo = () => {
                 </Chat>
             </ChatWrapper>
             <SCgViewerWrapper>
-                <iframe src={url} style={{width: '100%', height: '100%', border: 0, borderRadius: '15px'}}/>
+                <iframe src={url} style={{ width: '100%', height: '100%', border: 0, borderRadius: '15px' }} />
             </SCgViewerWrapper>
             {createMessageClassAndPhraseTemplatePopup && (
                 <PopupWrapper>
                     <MessageClassPopup />
                 </PopupWrapper>
-                )
-            }
+            )}
             {createPhraseTemplatePopup && (
                 <PopupWrapper>
                     <PhraseTemplatePopup />
                 </PopupWrapper>
-                )
-            }
+            )}
             {createClassInstancePopup && (
                 <PopupWrapper>
                     <ClassInstancePopup />
                 </PopupWrapper>
-                )
-            }
+            )}
             {createRelationToEntityPopup && (
                 <PopupWrapper>
                     <RelationToEntityPopup />
                 </PopupWrapper>
-                )
-            }
+            )}
             {createClassPopup && (
                 <PopupWrapper>
                     <ClassPopup />
                 </PopupWrapper>
-                )
-            }
+            )}
             {createRelationPopup && (
                 <PopupWrapper>
                     <RelationPopup />
                 </PopupWrapper>
-                )
-            }
-            
+            )}
+            <GridModal
+                open={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                buttonLabels={['Класс', 'Отношение', 'Экземпляр класса', 'Шаблон ответов']}
+                buttonHandlers={[
+                    () => setCreateClassPopup(true),
+                    () => setCreateRelationPopup(true),
+                    () => setCreateClassInstancePopup(true),
+                    () => setCreatePhraseTemplatePopup(true),
+                ]}
+            />
         </Wrapper>
     );
 };

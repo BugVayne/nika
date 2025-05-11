@@ -2,10 +2,18 @@ import styled from 'styled-components';
 import { ChatPageWrapper } from '@components/ChatPageWrapper';
 
 export const Wrapper = styled(ChatPageWrapper)`
+    display: grid;
     grid-template-areas:
-        'chat scgViewer'
-        'chat scgViewer';
+        'sidebar chat scgViewer'
+        'sidebar chat scgViewer';
+    grid-template-columns: 70px 1fr 1fr;
     grid-gap: 11px;
+    height: 100%;
+    width: 100%;
+`;
+
+export const SideBarGridArea = styled.div`
+    grid-area: sidebar;
 `;
 
 export const ChatWrapper = styled.div`
@@ -110,23 +118,23 @@ export const PopupWrapper = styled.div`
 
         .state-1 {
             margin-right: 40px;
-            background: #88afe2;
+            background: #849299;
             border: 1px solid #88afe2;
         }
 
         .state-2 {
-            background: #3c547b;
+            background: #39484d;
             border: 1px solid #3c547b;
         }
 
         .state-3 {
             margin-right: 40px;
-            background: #3c547b;
+            background: #39484d;
             border: 1px solid #3c547b;
         }
 
         .state-4 {
-            background: rgb(203, 203, 203);
+            background: #849299;
             border: 1px solid rgb(203, 203, 203);
         }
 
@@ -138,23 +146,26 @@ export const PopupWrapper = styled.div`
             border: 1px solid gray;
             margin-bottom: 7px;
             padding-left: 10px;
+            cursor: pointer;
         }
 
         input::placeholder {
-            color: black;
+            color: grey;
         }
 
         .close_button {
             color: black;
             background: none;
             border: none;
-            padding: 0;
+            padding: 3px;
             font-size: 30px;
             position: absolute;
             right: 20px;
             top: 16px;
             width: 30px;
             height: 30px;
+            cursor: pointer;
+            transition: box-shadow 0.3s;
         }
 
         .form {
@@ -170,29 +181,66 @@ export const PopupWrapper = styled.div`
         }
 
         .next {
-            background-color: #3c547b;
-            border: 1px solid #3c547b;
+            background-color: #39484d;
+            border: 1px solid #849299;
             position: absolute;
             bottom: 70px;
             left: 3%;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.13);
+            transition: background 0.3s, box-shadow 0.2s, color 0.2s;
+
+            &:hover {
+                background: #849299;
+                box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.28);
+                border: 2px solid #849299;
+                color: black;
+            }
+
+            &:active {
+                background: #e8ebf0;
+                box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.31);
+            }
         }
 
         .save {
-            background-color: #3c547b;
-            border: 1px solid #3c547b;
+            background-color: #39484d;
+            border: 1px solid #849299;
             position: absolute;
             bottom: 10px;
             left: 3%;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.13);
+            transition: background 0.3s, box-shadow 0.2s, color 0.2s;
+
+            &:hover {
+                background: #849299;
+                box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.28);
+                border: 2px solid #849299;
+                color: black;
+            }
+
+            &:active {
+                background: #e8ebf0;
+                box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.31);
+            }
         }
 
         .chips {
             width: 100%;
             display: flex;
-            align-items: center;
+            align-items: left;
+            flex-direction: column;
         }
 
         .chip-div {
             display: flex;
+            flex-direction: row;
+            max-width: 100%;
+            padding-right: 10px;
         }
 
         .chip {
@@ -203,7 +251,7 @@ export const PopupWrapper = styled.div`
             border: 1px solid gray;
             width: 100%;
             padding-left: 10px;
-            margin-left: 10px;
+            padding-right: 10px;
             margin-bottom: 5px;
             height: 4vh;
             display: flex;
@@ -223,6 +271,7 @@ export const PopupWrapper = styled.div`
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
         }
 
         .chip-input {
