@@ -12,11 +12,17 @@ import {
 } from '@api/sc/agents/helper';
 import { AutoComplete } from 'antd';
 import { FormInput } from './styled';
+//----------------------------------------
+import { useAlert } from '@components/AlertComponent/AlertContext';
+//----------------------------------------
 
 export const CreateMessageClassPopup = (setCreatePopup, setCreatePhraseTemplatePopup, setForm) => {
     const messageSystemIdentifierRef = useRef<HTMLInputElement>(null);
     const messageRussianIdentifierRef = useRef<HTMLInputElement>(null);
     const messageWitAiRef = useRef<HTMLInputElement>(null);
+    //------------------------------
+    const { showAlert } = useAlert();
+    //----------------------------
 
     useEffect(() => {
         messageSystemIdentifierRef.current!.value = 'concept_message_about_';
@@ -27,19 +33,19 @@ export const CreateMessageClassPopup = (setCreatePopup, setCreatePhraseTemplateP
         const idtf_prefix = 'concept_message_about_';
         const idtf_currentValue = messageSystemIdentifierRef.current?.value ?? '';
         if (!idtf_currentValue.startsWith(idtf_prefix) || idtf_currentValue.length <= idtf_prefix.length) {
-            alert('Некорректный системный идентификатор');
+            showAlert('Некорректный идентификатор');
             return;
         }
 
         const ru_prefix = 'Класс сообщений о';
         const ru_currentValue = messageRussianIdentifierRef.current?.value ?? '';
         if (!ru_currentValue.startsWith(ru_prefix) || ru_currentValue.length <= ru_prefix.length) {
-            alert('Некорректный идентификатор на русском языке');
+            showAlert('Некорректный идентификатор на русском языке');
             return;
         }
 
         if (!messageWitAiRef.current?.value) {
-            alert("Поле 'Название интента в Wit.ai' не может быть пустым");
+            showAlert("Поле 'Название интента в Wit.ai' не может быть пустым");
             return;
         }
         setCreatePopup(false);
@@ -80,7 +86,7 @@ export const CreateMessageClassPopup = (setCreatePopup, setCreatePhraseTemplateP
 
     return (
         <div className="popup">
-            <h3>Создание класса сообщений и класса ответных фраз</h3>
+            <h2>Создание класса сообщений и класса ответных фраз</h2>
             <button className="close_button" onClick={closeClick}>
                 ×
             </button>
@@ -118,12 +124,15 @@ export const CreateMessageClassPopup = (setCreatePopup, setCreatePhraseTemplateP
 export const CreatePhraseTemplatePopup = (setCreatePhraseTemplatePopup, form) => {
     const phraseSystemIdentifierRef = useRef<HTMLInputElement>(null);
     const phraseRussianIdentifierRef = useRef<HTMLInputElement>(null);
+    //------------------------------
+    const { showAlert } = useAlert();
+    //----------------------------
 
     const [chipsValues, setChipsValues] = useState<string[]>([]);
     const [editingIndex, setEditingIndex] = useState(null);
     const handleChipAdd = (value: string) => {
         if (!value) {
-            alert('Ответ не может быть пустым');
+            showAlert('Ответ не может быть пустым');
             return;
         }
         setChipsValues([...chipsValues, value]);
@@ -152,21 +161,21 @@ export const CreatePhraseTemplatePopup = (setCreatePhraseTemplatePopup, form) =>
 
     const handleClick: React.MouseEventHandler<HTMLButtonElement> = async (event) => {
         if (chipsValues.length == 0) {
-            alert('Вы не добавили ни одного ответа');
+            showAlert('Вы не добавили ни одного ответа');
             return;
         }
 
         const idtf_prefix = 'concept_phrase_about_';
         const idtf_currentValue = phraseSystemIdentifierRef.current?.value ?? '';
         if (!idtf_currentValue.startsWith(idtf_prefix) || idtf_currentValue.length <= idtf_prefix.length) {
-            alert('Некорректный системный идентификатор');
+            showAlert('Некорректный системный идентификатор');
             return;
         }
 
         const ru_prefix = 'Класс ответных фраз о';
         const ru_currentValue = phraseRussianIdentifierRef.current?.value ?? '';
         if (!ru_currentValue.startsWith(ru_prefix) || ru_currentValue.length <= ru_prefix.length) {
-            alert('Некорректный идентификатор на русском языке');
+            showAlert('Некорректный идентификатор на русском языке');
             return;
         }
 
@@ -201,7 +210,7 @@ export const CreatePhraseTemplatePopup = (setCreatePhraseTemplatePopup, form) =>
 
     return (
         <div className="popup">
-            <h3>Создание класса сообщений и класса ответных фраз</h3>
+            <h2>Создание класса сообщений и класса ответных фраз</h2>
             <button className="close_button" onClick={closeClick}>
                 ×
             </button>
@@ -277,6 +286,10 @@ export const CreateClassInstancePopup = (setCreateClassInstancePopup, setCreateR
     const [inputValue, setInputValue] = useState('concept_');
     const [availableClasses, setAvailableClasses] = useState<{ label: string; value: string }[]>([]);
 
+    //------------------------------
+    const { showAlert } = useAlert();
+    //----------------------------
+
     const onSelect = (data, option) => {
         setSelectedOption(option);
         setInputValue(option.label);
@@ -293,14 +306,14 @@ export const CreateClassInstancePopup = (setCreateClassInstancePopup, setCreateR
 
     const handleClick: React.MouseEventHandler<HTMLButtonElement> = async (event) => {
         if (!classInstanceRussianIdentifierRef.current?.value || !classInstanceSystemIdentifierRef.current?.value) {
-            alert('Вы не заполнили все обязательные поля');
+            showAlert('Вы не заполнили все обязательные поля');
             return;
         }
 
         const class_prefix = 'concept_';
         const class_currentValue = inputValue ?? '';
         if (!class_currentValue.startsWith(class_prefix) || class_currentValue.length <= class_prefix.length) {
-            alert('Некорректный класс экземпляра');
+            showAlert('Некорректный класс экземпляра');
             return;
         }
 
@@ -315,14 +328,14 @@ export const CreateClassInstancePopup = (setCreateClassInstancePopup, setCreateR
 
     const handleAddRelationClick: React.MouseEventHandler<HTMLButtonElement> = async (event) => {
         if (!classInstanceRussianIdentifierRef.current?.value || !classInstanceSystemIdentifierRef.current?.value) {
-            alert('Вы не заполнили все обязательные поля');
+            showAlert('Вы не заполнили все обязательные поля');
             return;
         }
 
         const class_prefix = 'concept_';
         const class_currentValue = inputValue ?? '';
         if (!class_currentValue.startsWith(class_prefix) || class_currentValue.length <= class_prefix.length) {
-            alert('Некорректный класс экземпляра');
+            showAlert('Некорректный класс экземпляра');
             return;
         }
 
@@ -406,6 +419,10 @@ export const AddRelationToEntityPopup = (setCreateRelationToEntityPopup, firstFo
     const [availableRelations, setAvailableRelations] = useState<{ label: string; value: string }[]>([]);
     const [form, setForm] = useState<{ entity: string; relation: string }[]>([]);
 
+    //------------------------------
+    const { showAlert } = useAlert();
+    //----------------------------
+
     const onSelectEntity = (data, option) => {
         setSelectedEntityOption(option);
         setEntity(option.label);
@@ -441,14 +458,14 @@ export const AddRelationToEntityPopup = (setCreateRelationToEntityPopup, firstFo
         const concept_prefix = 'concept_';
         const concept_currentValue = entity ?? '';
         if (!concept_currentValue.startsWith(concept_prefix) || concept_currentValue.length <= concept_prefix.length) {
-            alert('Некорректная сущность');
+            showAlert('Некорректная сущность');
             return;
         }
 
         const nrel_prefix = 'nrel_';
         const nrel_currentValue = relation ?? '';
         if (!nrel_currentValue.startsWith(nrel_prefix) || nrel_currentValue.length <= nrel_prefix.length) {
-            alert('Некорректное отношение');
+            showAlert('Некорректное отношение');
             return;
         }
 
@@ -541,6 +558,10 @@ export const CreateClassPopup = (setCreateClassPopup) => {
     const [inputValueDecomposition, setInputValueDecomposition] = useState('concept_');
     const [availableClasses, setAvailableClasses] = useState<{ label: string; value: string }[]>([]);
 
+    //------------------------------
+    const { showAlert } = useAlert();
+    //----------------------------
+
     const onSelect = (data, option) => {
         setSelectedOption(option);
         setInputValue(option.label);
@@ -563,14 +584,14 @@ export const CreateClassPopup = (setCreateClassPopup) => {
 
     const handleChipAdd = (value: string) => {
         if (chipsValues.includes(value)) {
-            alert('Компонент не может быть добавлен дважды');
+            showAlert('Компонент не может быть добавлен дважды');
             return;
         }
 
         const prefix = 'concept_';
         const currentValue = value ?? '';
         if (!currentValue.startsWith(prefix) || currentValue.length <= prefix.length) {
-            alert('Некорректный элемент декомпозиции');
+            showAlert('Некорректный элемент декомпозиции');
             return;
         }
 
@@ -600,14 +621,14 @@ export const CreateClassPopup = (setCreateClassPopup) => {
 
     const handleClick: React.MouseEventHandler<HTMLButtonElement> = async (event) => {
         if (!classRussianIdentifierRef.current?.value || !classNoteIdentifierRef.current?.value) {
-            alert('Вы не заполнили все обязательные поля');
+            showAlert('Вы не заполнили все обязательные поля');
             return;
         }
 
         const prefix = 'concept_';
         const idtf_currentValue = classSystemIdentifierRef.current?.value ?? '';
         if (!idtf_currentValue.startsWith(prefix) || idtf_currentValue.length <= prefix.length) {
-            alert('Некорректный системный идентификатор');
+            showAlert('Некорректный системный идентификатор');
             return;
         }
 
@@ -615,7 +636,7 @@ export const CreateClassPopup = (setCreateClassPopup) => {
         const innput_currentValue = inputValue ?? '';
         if (innput_currentValue != '') {
             if (!innput_currentValue.startsWith(idtf_prefix) || innput_currentValue.length < idtf_prefix.length) {
-                alert('Некорректный системный идентификатор');
+                showAlert('Некорректный системный идентификатор');
                 return;
             }
         }
@@ -760,6 +781,9 @@ export const CreateRelationPopup = (setCreateRelationPopup) => {
     const [isAntireflexiveChecked, setIsAntireflexiveChecked] = useState(false);
     const [isAsymmetricChecked, setIsAsymmetricChecked] = useState(false);
     const [isAntitransitiveChecked, setIsAntitransitiveChecked] = useState(false);
+    //------------------------------
+    const { showAlert } = useAlert();
+    //----------------------------
 
     const handleBinaryCheckboxChange = () => {
         setIsBinaryChecked(!isBinaryChecked);
@@ -816,22 +840,22 @@ export const CreateRelationPopup = (setCreateRelationPopup) => {
         const idtf_prefix = 'nrel_';
         const idtf_currentValue = relationSystemIdentifierRef.current?.value ?? '';
         if (!idtf_currentValue.startsWith(idtf_prefix) || idtf_currentValue.length <= idtf_prefix.length) {
-            alert('Некорректный системный идентификатор');
+            showAlert('Некорректный системный идентификатор');
             return;
         }
 
         if (!relationRussianIdentifierRef.current?.value) {
-            alert('Пустой идентификатор на русском языке');
+            showAlert('Пустой идентификатор на русском языке');
             return;
         }
 
         if (!firstDomain || !secondDomain) {
-            alert('Пустой домен');
+            showAlert('Пустой домен');
             return;
         }
 
         if (firstDomain == secondDomain) {
-            alert('Первый домен не может быть равен второму');
+            showAlert('Первый домен не может быть равен второму');
             return;
         }
 

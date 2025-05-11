@@ -20,6 +20,7 @@ import {
 } from './Popups';
 
 import { SideBarPanel, GridModal } from '@components/Chat/SideBar/SideBar';
+import { AlertProvider } from '@components/AlertComponent/AlertContext';
 
 const client = new ScClient(SC_URL);
 
@@ -99,85 +100,87 @@ export const Demo = () => {
     };
 
     return (
-        <Wrapper>
-            <SideBarGridArea>
-                <SideBarPanel onBottomButtonClick={handleOpenModal} />
-            </SideBarGridArea>
-            <ChatWrapper>
-                <Chat
-                    ref={chatRef}
-                    isLoading={isLoading}
-                    onSend={onSend}
-                    onFetching={onFetching}
-                    isAgentAnswer={isAgentAnswer}
-                >
-                    {messages.map((item, ind) => {
-                        const prevItem = messages[ind - 1];
-                        const showDate = item.date !== prevItem?.date;
-                        return (
-                            <Fragment key={item.id}>
-                                {showDate && <Date date={item.date} />}
-                                <Message
-                                    addr={item.addr}
-                                    isLeft={!!user && !item.author.equal(user)}
-                                    time={item.time}
-                                    isLoading={item.isLoading}
-                                >
-                                    {typeof item.text === 'string' ? (
-                                        <div dangerouslySetInnerHTML={{ __html: item.text }} />
-                                    ) : (
-                                        <div>{item.text}</div>
-                                    )}
-                                </Message>
-                            </Fragment>
-                        );
-                    })}
-                </Chat>
-            </ChatWrapper>
-            <SCgViewerWrapper>
-                <iframe src={url} style={{ width: '100%', height: '100%', border: 0, borderRadius: '15px' }} />
-            </SCgViewerWrapper>
-            {createMessageClassAndPhraseTemplatePopup && (
-                <PopupWrapper>
-                    <MessageClassPopup />
-                </PopupWrapper>
-            )}
-            {createPhraseTemplatePopup && (
-                <PopupWrapper>
-                    <PhraseTemplatePopup />
-                </PopupWrapper>
-            )}
-            {createClassInstancePopup && (
-                <PopupWrapper>
-                    <ClassInstancePopup />
-                </PopupWrapper>
-            )}
-            {createRelationToEntityPopup && (
-                <PopupWrapper>
-                    <RelationToEntityPopup />
-                </PopupWrapper>
-            )}
-            {createClassPopup && (
-                <PopupWrapper>
-                    <ClassPopup />
-                </PopupWrapper>
-            )}
-            {createRelationPopup && (
-                <PopupWrapper>
-                    <RelationPopup />
-                </PopupWrapper>
-            )}
-            <GridModal
-                open={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                buttonLabels={['Класс', 'Отношение', 'Экземпляр класса', 'Шаблон ответов']}
-                buttonHandlers={[
-                    () => setCreateClassPopup(true),
-                    () => setCreateRelationPopup(true),
-                    () => setCreateClassInstancePopup(true),
-                    () => setCreatePhraseTemplatePopup(true),
-                ]}
-            />
-        </Wrapper>
+        <AlertProvider>
+            <Wrapper>
+                <SideBarGridArea>
+                    <SideBarPanel onBottomButtonClick={handleOpenModal} />
+                </SideBarGridArea>
+                <ChatWrapper>
+                    <Chat
+                        ref={chatRef}
+                        isLoading={isLoading}
+                        onSend={onSend}
+                        onFetching={onFetching}
+                        isAgentAnswer={isAgentAnswer}
+                    >
+                        {messages.map((item, ind) => {
+                            const prevItem = messages[ind - 1];
+                            const showDate = item.date !== prevItem?.date;
+                            return (
+                                <Fragment key={item.id}>
+                                    {showDate && <Date date={item.date} />}
+                                    <Message
+                                        addr={item.addr}
+                                        isLeft={!!user && !item.author.equal(user)}
+                                        time={item.time}
+                                        isLoading={item.isLoading}
+                                    >
+                                        {typeof item.text === 'string' ? (
+                                            <div dangerouslySetInnerHTML={{ __html: item.text }} />
+                                        ) : (
+                                            <div>{item.text}</div>
+                                        )}
+                                    </Message>
+                                </Fragment>
+                            );
+                        })}
+                    </Chat>
+                </ChatWrapper>
+                <SCgViewerWrapper>
+                    <iframe src={url} style={{ width: '100%', height: '100%', border: 0, borderRadius: '15px' }} />
+                </SCgViewerWrapper>
+                {createMessageClassAndPhraseTemplatePopup && (
+                    <PopupWrapper>
+                        <MessageClassPopup />
+                    </PopupWrapper>
+                )}
+                {createPhraseTemplatePopup && (
+                    <PopupWrapper>
+                        <PhraseTemplatePopup />
+                    </PopupWrapper>
+                )}
+                {createClassInstancePopup && (
+                    <PopupWrapper>
+                        <ClassInstancePopup />
+                    </PopupWrapper>
+                )}
+                {createRelationToEntityPopup && (
+                    <PopupWrapper>
+                        <RelationToEntityPopup />
+                    </PopupWrapper>
+                )}
+                {createClassPopup && (
+                    <PopupWrapper>
+                        <ClassPopup />
+                    </PopupWrapper>
+                )}
+                {createRelationPopup && (
+                    <PopupWrapper>
+                        <RelationPopup />
+                    </PopupWrapper>
+                )}
+                <GridModal
+                    open={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    buttonLabels={['Класс', 'Отношение', 'Экземпляр класса', 'Шаблон ответов']}
+                    buttonHandlers={[
+                        () => setCreateClassPopup(true),
+                        () => setCreateRelationPopup(true),
+                        () => setCreateClassInstancePopup(true),
+                        () => setCreateMessageClassAndPhraseTemplatePopup(true),
+                    ]}
+                />
+            </Wrapper>
+        </AlertProvider>
     );
 };
